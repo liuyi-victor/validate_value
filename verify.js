@@ -1,15 +1,17 @@
 module.exports.verify = function (code, price, client, callback)
 {
     //in the form of object, can also be in map form
+    /*
     var dictionary = {"SBUX": [5,10,15,20,50], 
                       "FMSA": [15, 50, 100, 250, 500],
                       "AMZN": {minimum: 10, maximum: 200},
                       "AAPL": {minimum: 25, maximum: 300},
                       "EBAY": [25,50,100,200]};
     var result = dictionary[code];
-    
+    */
     
     const dbName = 'brand';
+    const assert = require('assert');
     /*
     //the MongoDB client should be passed in and already connected to the database server
     
@@ -54,10 +56,10 @@ module.exports.verify = function (code, price, client, callback)
         assert.equal(null, err1);
         console.log("checking the number of matches of brand");
         curs.toArray((err3, docs) => {
-            console.log(docs.length);
+            assert(1, docs.length);
             console.log(docs);
             console.log("checking the price for: "+code+" and price = "+price);
-            callback(check(docs[0], price));
+            callback(check(docs[0].value, price));
         });
     });
     
@@ -87,12 +89,15 @@ module.exports.verify = function (code, price, client, callback)
 }
 function check(result, price)
 {
+    console.log("requested price = "+price);
+    console.log(result);
     if(result)
     {
         if(result instanceof Array)
         {
             //discrete gift card values
-            if(result.includes(price))
+            //console.log("array of discrete values, length = "+result.length);
+            if(result.includes(parseInt(price)))
                 return true;
             else
                 return false;
@@ -100,6 +105,7 @@ function check(result, price)
         else
         {
             //a range of gift card values
+            console.log("range of values. minimum = "+result.minimum+" maximum = "+result.maximum);
             if(price >= result.minimum && price <= result.maximum)
                 return true;
             else
