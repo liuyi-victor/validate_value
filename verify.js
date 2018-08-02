@@ -1,4 +1,4 @@
-module.exports.verify = function (code, price, client)
+module.exports.verify = function (code, price, client, callback)
 {
     //in the form of object, can also be in map form
     var dictionary = {"SBUX": [5,10,15,20,50], 
@@ -57,7 +57,7 @@ module.exports.verify = function (code, price, client)
             console.log(docs.length);
             console.log(docs);
             console.log("checking the price for: "+code+" and price = "+price);
-            return check(docs[0], price);
+            callback(check(docs[0], price));
         });
     });
     
