@@ -5,7 +5,7 @@ const express = require('express')
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 const verification = require('./verify')
-const bodyParser = require('body-parser');
+
 var app = express();
 
 const url = 'mongodb://localhost:27017';
